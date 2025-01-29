@@ -1,24 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import { useState } from 'react';
+import './App.css';
+import { Login } from './Views/Login';
+import { Register } from './Views/Register';
+
+const App: React.FC = () => {
+  const [login, setLogin] = useState<boolean>(true);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {login ? <Login setLogin={setLogin} /> : <Register setLogin={setLogin} />}
     </div>
   );
 }
