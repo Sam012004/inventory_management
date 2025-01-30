@@ -5,7 +5,7 @@ import styles from "./LeftSide.module.css"
 const LeftSide = ({ setLogin }: { setLogin: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
   const handleSwitchToRegister = () => {
-    setLogin(false); // Switch to Register page when button is clicked
+    setLogin(false); 
   }
 
   return (

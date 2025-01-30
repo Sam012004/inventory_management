@@ -1,7 +1,5 @@
 
 import { Box } from "@mui/material"
-// import LeftSide  from "../components/LeftSide"
-// import  RightSide  from "../components/RightSide"
 import RegisterLeftSide from '../components/RegisterLeftSide'
 import RegisterRightSide from'../components/RegisterRightSide'
 import styles from './Register.module.css'
