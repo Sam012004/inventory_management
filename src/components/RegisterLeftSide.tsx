@@ -25,13 +25,13 @@ const RightSide = () => {
     confirmPasswordError: ''
   });
 
-  function handleSubmit(event: any) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
     let isValid = true;
-    event.preventDefault();
-
     const errorMessages = {
       userNameError: '',
       emailError: '',
@@ -39,68 +39,81 @@ const RightSide = () => {
       confirmPasswordError: ''
     };
 
-    const errors: string[] = [];
-
-    if (registerUserDetails.userName.trim() === '') {
-      errorMessages.userNameError = getErrorMsg('2.1', 'user_name_is_empty'); 
-      // errors.push(getErrorMsg('2.1', 'REGISTER_PAGE'));
+    if (!registerUserDetails.userName.trim()) {
+      errorMessages.userNameError = "User name is required!";
       isValid = false;
     }
 
-    if (registerUserDetails.email.trim() === '') {
-      errorMessages.emailError = getErrorMsg('2.2', 'email_id_is_empty');
-      // errors.push(getErrorMsg('2.2', 'email_id_is_empty'));
-      // errors.push(errorMessages.emailError);
-
+    if (!registerUserDetails.email.trim()) {
+      errorMessages.emailError = "Email is required!";
       isValid = false;
     } else if (!emailRegex.test(registerUserDetails.email)) {
-      errorMessages.emailError = getErrorMsg('2.3', 'email_id_is_invalid');
-      errors.push(getErrorMsg('2.3', 'email_id_is_invalid'));
+      errorMessages.emailError = "Invalid email format!";
       isValid = false;
     }
 
-
-    if (registerUserDetails.password.trim() === '') {
-      errorMessages.passwordError = getErrorMsg('2.4', 'password_is_empty');
-      errors.push(getErrorMsg('2.4', 'password_is_empty'));
+    if (!registerUserDetails.password.trim()) {
+      errorMessages.passwordError = "Password is required!";
       isValid = false;
     } else if (!passwordRegex.test(registerUserDetails.password)) {
-      errorMessages.passwordError = getErrorMsg('2.7', 'password_is_Invalid');
-      errors.push(getErrorMsg('2.7', 'password_is_Invalid'));
+      errorMessages.passwordError = "Password must have at least 8 characters, including an uppercase letter.";
       isValid = false;
     }
 
-    if (registerUserDetails.confirmPassword.trim() === '') {
-      errorMessages.confirmPasswordError = getErrorMsg('2.5', 'confirm_password');
-      errors.push(getErrorMsg('2.5', 'confirm_password'));
+    if (!registerUserDetails.confirmPassword.trim()) {
+      errorMessages.confirmPasswordError = "Confirm Password is required!";
       isValid = false;
     } else if (registerUserDetails.password !== registerUserDetails.confirmPassword) {
-      errorMessages.confirmPasswordError = getErrorMsg('2.6', 'confirm_password_mismatch');
-      errors.push(getErrorMsg('2.6', 'confirm_password_mismatch'))
+      errorMessages.confirmPasswordError = "Passwords do not match!";
       isValid = false;
     }
 
     setRegisterUserDetailsError(errorMessages);
 
     if (isValid) {
-      console.log(registerUserDetails); 
+      try {
+ 
+        const response = await fetch('http://localhost:5000/api/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userName: registerUserDetails.userName,
+            email: registerUserDetails.email,
+            password: registerUserDetails.password,
+            confirmPassword: registerUserDetails.confirmPassword,
+          }),
+        });
 
-      setRegisterUserDetails({
-        userName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
-      setRegisterUserDetailsError({
-        userNameError: '',
-        emailError: '',
-        passwordError: '',
-        confirmPasswordError: ''
-      });
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Registration successful:', data);
+          alert(data.message);
+          setRegisterUserDetails({
+            userName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+          });
+          setRegisterUserDetailsError({
+            userNameError: '',
+            emailError: '',
+            passwordError: '',
+            confirmPasswordError: ''
+          });
+        } else {
+          console.log('Registration failed:', data.message);
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+      }
     }
-  }
+  };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof typeof registerUserDetails, value: string) => {
     setRegisterUserDetails(prevState => ({
       ...prevState,
       [field]: value

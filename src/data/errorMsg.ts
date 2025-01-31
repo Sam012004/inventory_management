@@ -54,18 +54,24 @@ export const ErrorList: ErrorListType[] = [
         message: 'Password is required',
       },
       {
-        id: '2.7',
+        id: '2.5',
+        name: 'password_is_Weak',
+        message: 'Password is Weak',
+      },
+      {
+        id: '2.6',
         name: 'password_is_Invalid',
         message: 'Password is Invalid',
       },
       
       {
-        id: '2.5',
+        id: '2.7',
         name: 'confirm_password',
         message: 'Confirm Password is required',
       },
+      
       {
-        id: '2.6',
+        id: '2.8',
         name: 'confirm_password_mismatch',
         message: 'Password & Confirm Password is mismatch',
       },

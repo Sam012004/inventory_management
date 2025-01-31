@@ -5,13 +5,14 @@ import { FaFacebookF, FaUser, FaLock, FaGithub } from "react-icons/fa";
 import { IoLogoLinkedin } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
-import { ErrorList, getErrorMsg }from "../data/errorMsg"
+import { getErrorMsg } from "../data/errorMsg"
 import { UserDetailsError, UserDetailsType } from "../Interface/Login.interface";
+import { useNavigate } from "react-router-dom";
 
 const RightSide = () => {
   const [userDetailsError, setUserDetailsError] = useState<UserDetailsError>({ userNameError: '', passwordError: '' });
   const [userDetails, setUserDetails] = useState<UserDetailsType>({ userName: '', password: '' });
-
+ const navigate = useNavigate()
   function handleLogin(event: any) {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
@@ -25,13 +26,13 @@ const RightSide = () => {
     if (userDetails.userName.trim() === '') {
       setUserDetailsError((prevState) => ({
         ...prevState,
-        userNameError: getErrorMsg('1.1', 'email_id_is_empty'),  
+        userNameError: getErrorMsg('1.1', 'email_id_is_empty'),
       }));
       isValid = false;
     } else if (!emailRegex.test(userDetails.userName)) {
       setUserDetailsError((prevState) => ({
         ...prevState,
-        userNameError: getErrorMsg('1.2', 'email_id_is_invalid'),  
+        userNameError: getErrorMsg('1.2', 'email_id_is_invalid'),
       }));
       isValid = false;
     } else {
@@ -41,19 +42,30 @@ const RightSide = () => {
     if (userDetails.password.trim() === '') {
       setUserDetailsError((prevState) => ({
         ...prevState,
-        passwordError: getErrorMsg('1.3', 'password_is_empty'),  
+        passwordError: getErrorMsg('1.3', 'password_is_empty'),
       }));
       isValid = false;
-    } 
+    }
     else {
       LoginData.push(userDetails.password);
     }
 
     if (isValid) {
-      console.log("Login successful!" + LoginData);
+      console.log("Login successful!");
+      console.log(userDetails);
+     setUserDetails({
+       userName: '', 
+       password: '' 
+      });
+
+      setUserDetailsError({
+         userNameError: '',
+         passwordError: ''
+      })
+      navigate('/homepage');
     }
   }
-
+  
   const handleInputChange = (field: string, value: string) => {
     setUserDetails(prevState => ({
       ...prevState,
@@ -63,7 +75,7 @@ const RightSide = () => {
     if (value.trim() !== '') {
       setUserDetailsError(prevState => ({
         ...prevState,
-        [`${field}Error`]: '' 
+        [`${field}Error`]: ''
       }));
     }
   };
@@ -86,12 +98,12 @@ const RightSide = () => {
             placeholder="Enter Username"
             variant="outlined"
             value={userDetails.userName}
-            onChange={(e)=>handleInputChange('userName',e.target.value)}
+            onChange={(e) => handleInputChange('userName', e.target.value)}
             InputProps={{
               endAdornment: <InputAdornment position='end'><FaUser /></InputAdornment>,
             }}
           />
-          <p style={{ marginTop: "0px", marginBottom: "-11px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
+          <p className={styles.ErrorMessage} style={{whiteSpace:"preserve"}}>
             {userDetailsError.userNameError ? userDetailsError.userNameError : " "}
           </p>
 
@@ -106,7 +118,7 @@ const RightSide = () => {
             variant="outlined"
             type="password"
             value={userDetails.password}
-            onChange={(e)=> handleInputChange('password',e.target.value)}
+            onChange={(e) => handleInputChange('password', e.target.value)}
             InputProps={{
               endAdornment: <InputAdornment position='end'><FaLock /></InputAdornment>
             }}

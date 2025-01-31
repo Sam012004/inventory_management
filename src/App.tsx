@@ -1,17 +1,22 @@
-
-import { useState } from 'react';
-import './App.css';
-import { Login } from './Views/Login';
-import { Register } from './Views/Register';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LoginPage from './Views/LoginPage';
+import HomePage from './Views/HomePage';
+import "./App.css"
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <LoginPage />,
+  },
+  {
+    path: '/homepage', 
+    element: <HomePage />,
+  },
+]);
 
 const App: React.FC = () => {
-  const [login, setLogin] = useState<boolean>(true);
-
   return (
-    <div className="App">
-      {login ? <Login setLogin={setLogin} /> : <Register setLogin={setLogin} />}
-    </div>
+    <RouterProvider router={router} />
   );
-}
+};
 
 export default App;
