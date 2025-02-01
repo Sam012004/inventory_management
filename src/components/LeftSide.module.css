@@ -7,7 +7,9 @@
     align-items: center !important;     
     height: 80vh;           
     text-align: center; 
-    color: white;   
+    color: white; 
+    margin-top: 35px !important;
+ 
       
   }
   .Register .MuiButton-root{

@@ -12,17 +12,18 @@
   justify-content: center;
   background-color:whitesmoke;
   width: 60%;
-  height: 500px;
+  height: 580px;
   border-radius: 30px;
 }
 
 .main {
   display: flex;
   justify-content: center;
-  margin-top: 70px;
+  margin-top: 30px;
 }
 
 .leftSide {
+  
   background-color: rgb(156, 156, 233);
   width: 50%;
   border-bottom-right-radius: 100px;
@@ -34,7 +35,7 @@
   background-color:whitesmoke;
   width: 50%;
   height: 100%; 
-  margin-top: 80px;
+  margin-top: 130px;
  
 }
 a:link {

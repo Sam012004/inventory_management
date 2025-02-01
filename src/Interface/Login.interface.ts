@@ -9,13 +9,15 @@ export interface UserDetailsError{
 }
 
 export interface RegisterUserDetailType{
-    userName:string;
+    firstname:string;
+    lastname:string;
     email:string;
     password:string;
-    confirmPassword:string;
+    confirmpassword:string;
 }
 export interface RegisterUserDetailError{
-    userNameError:string;
+    firstnameError:string;
+    lastnameError:string;
     emailError:string;
     passwordError:string;
     confirmPasswordError:string;

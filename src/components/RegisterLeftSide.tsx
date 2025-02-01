@@ -11,15 +11,18 @@ import { RegisterUserDetailError, RegisterUserDetailType } from "../Interface/Lo
 import {  getErrorMsg } from '../data/errorMsg';
 
 const RightSide = () => {
+  console.log("RightSide")
   const [registerUserDetails, setRegisterUserDetails] = useState<RegisterUserDetailType>({
-    userName: '',
+    firstname: '',
+    lastname:'',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmpassword: ''
   });
 
   const [registerUserDetailsError, setRegisterUserDetailsError] = useState<RegisterUserDetailError>({
-    userNameError: '',
+    firstnameError: '',
+    lastnameError:'',
     emailError: '',
     passwordError: '',
     confirmPasswordError: ''
@@ -33,56 +36,68 @@ const RightSide = () => {
 
     let isValid = true;
     const errorMessages = {
-      userNameError: '',
+      firstnameError: '',
+      lastnameError:'',
       emailError: '',
       passwordError: '',
       confirmPasswordError: ''
     };
-
-    if (!registerUserDetails.userName.trim()) {
-      errorMessages.userNameError = "User name is required!";
+    const errors: string[] = [];
+    if (registerUserDetails.firstname.trim() === '') {
+      errorMessages.firstnameError = getErrorMsg('2.1', 'firstname_is_empty'); 
+      // errors.push(getErrorMsg('2.1', 'REGISTER_PAGE'));
       isValid = false;
     }
-
-    if (!registerUserDetails.email.trim()) {
-      errorMessages.emailError = "Email is required!";
+    if (registerUserDetails.lastname.trim() === '') {
+      errorMessages.lastnameError = getErrorMsg('2.9', 'lastname_is_empty'); 
+      // errors.push(getErrorMsg('2.1', 'REGISTER_PAGE'));
+      isValid = false;
+    }
+    if (registerUserDetails.email.trim() === '') {
+      errorMessages.emailError = getErrorMsg('2.2', 'email_id_is_empty');
+      // errors.push(getErrorMsg('2.2', 'email_id_is_empty'));
+      // errors.push(errorMessages.emailError);
       isValid = false;
     } else if (!emailRegex.test(registerUserDetails.email)) {
-      errorMessages.emailError = "Invalid email format!";
+      errorMessages.emailError = getErrorMsg('2.3', 'email_id_is_invalid');
+      errors.push(getErrorMsg('2.3', 'email_id_is_invalid'));
       isValid = false;
     }
-
-    if (!registerUserDetails.password.trim()) {
-      errorMessages.passwordError = "Password is required!";
+    if (registerUserDetails.password.trim() === '') {
+      errorMessages.passwordError = getErrorMsg('2.4', 'password_is_empty');
+      errors.push(getErrorMsg('2.4', 'password_is_empty'));
       isValid = false;
     } else if (!passwordRegex.test(registerUserDetails.password)) {
-      errorMessages.passwordError = "Password must have at least 8 characters, including an uppercase letter.";
+      errorMessages.passwordError = getErrorMsg('2.7', 'password_is_Invalid');
+      errors.push(getErrorMsg('2.7', 'password_is_Invalid'));
       isValid = false;
     }
-
-    if (!registerUserDetails.confirmPassword.trim()) {
-      errorMessages.confirmPasswordError = "Confirm Password is required!";
+    if (registerUserDetails.confirmpassword.trim() === '') {
+      errorMessages.confirmPasswordError = getErrorMsg('2.5', 'confirm_password');
+      errors.push(getErrorMsg('2.5', 'confirm_password'));
       isValid = false;
-    } else if (registerUserDetails.password !== registerUserDetails.confirmPassword) {
-      errorMessages.confirmPasswordError = "Passwords do not match!";
+    } else if (registerUserDetails.password !== registerUserDetails.confirmpassword) {
+      errorMessages.confirmPasswordError = getErrorMsg('2.6', 'confirm_password_mismatch');
+      errors.push(getErrorMsg('2.6', 'confirm_password_mismatch'))
       isValid = false;
     }
-
     setRegisterUserDetailsError(errorMessages);
 
     if (isValid) {
+      console.log(registerUserDetails)
       try {
  
-        const response = await fetch('http://localhost:5000/api/users/register', {
+        const response = await fetch('http://localhost:5000/users/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userName: registerUserDetails.userName,
-            email: registerUserDetails.email,
-            password: registerUserDetails.password,
-            confirmPassword: registerUserDetails.confirmPassword,
+            "firstname": registerUserDetails.firstname,
+            "lastname": registerUserDetails.lastname,
+            "email": registerUserDetails.email,
+            "password": registerUserDetails.password,
+            "confirmpassword": registerUserDetails.confirmpassword,
           }),
         });
 
@@ -92,13 +107,15 @@ const RightSide = () => {
           console.log('Registration successful:', data);
           alert(data.message);
           setRegisterUserDetails({
-            userName: '',
+            firstname: '',
+            lastname:'',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmpassword: ''
           });
           setRegisterUserDetailsError({
-            userNameError: '',
+            firstnameError: '',
+            lastnameError:'',
             emailError: '',
             passwordError: '',
             confirmPasswordError: ''
@@ -135,22 +152,40 @@ const RightSide = () => {
         </Typography>
         <Stack direction={"column"} spacing={2} width={"80%"}>
           <p className={styles.inputLabels}>
-            UserName<span className={styles.requiredAsterisk}> *</span>
+            firstname<span className={styles.requiredAsterisk}> *</span>
           </p>
           <TextField
             id="outlined-basic"
             size='small'
             className={styles.inputField}
             variant="outlined"
-            value={registerUserDetails.userName}
+            value={registerUserDetails.firstname}
             placeholder="Enter Username"
-            onChange={(e) => handleInputChange('userName', e.target.value)}
+            onChange={(e) => handleInputChange('firstname', e.target.value)}
             InputProps={{
               endAdornment: <InputAdornment position='end'><FaUser /></InputAdornment>,
             }}
           />
           <p style={{ marginTop: "0px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
-            {registerUserDetailsError.userNameError ? registerUserDetailsError.userNameError : " "}
+            {registerUserDetailsError.firstnameError ? registerUserDetailsError.firstnameError : " "}
+          </p>
+          <p className={styles.inputLabels}>
+            lastname<span className={styles.requiredAsterisk}> *</span>
+          </p>
+          <TextField
+            id="outlined-basic"
+            size='small'
+            className={styles.inputField}
+            variant="outlined"
+            value={registerUserDetails.lastname}
+            placeholder="Enter lastname"
+            onChange={(e) => handleInputChange('lastname', e.target.value)}
+            InputProps={{
+              endAdornment: <InputAdornment position='end'><FaUser /></InputAdornment>,
+            }}
+          />
+          <p style={{ marginTop: "0px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
+            {registerUserDetailsError.lastnameError ? registerUserDetailsError.lastnameError : " "}
           </p>
 
           <p className={styles.inputLabels}>
@@ -197,13 +232,13 @@ const RightSide = () => {
             Confirm Password<span className={styles.requiredAsterisk}> *</span>
           </p>
           <TextField
-            id="confirmPassword"
+            id="confirmpassword"
             size='small'
             className={styles.inputField}
             variant="outlined"
-            value={registerUserDetails.confirmPassword}
+            value={registerUserDetails.confirmpassword}
             placeholder="Enter Confirm Password"
-            onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+            onChange={(e) => handleInputChange('confirmpassword', e.target.value)}
             type="password"
             InputProps={{
               endAdornment: <InputAdornment position='end'><FaLock /></InputAdornment>

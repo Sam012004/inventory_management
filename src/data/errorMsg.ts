@@ -35,8 +35,13 @@ export const ErrorList: ErrorListType[] = [
     children: [
       {
         id: '2.1',
-        name: 'user_name_is_empty',
-        message: 'User Name is required',
+        name: 'firstname_is_empty',
+        message: 'Firstname is required',
+      },
+      {
+        id: '2.9',
+        name: 'lastname_is_empty',
+        message: 'Lastname is required',
       },
       {
         id: '2.2',

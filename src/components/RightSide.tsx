@@ -134,7 +134,8 @@ const RightSide = () => {
         <Button
           variant="contained"
           sx={{ width: "80%", height: "40%" }}
-          onClick={handleLogin}
+          // onClick={handleLogin}
+          type="submit"
         >
           <Typography style={{ textTransform: 'none', fontWeight: 700 }}>Login</Typography>
         </Button>
