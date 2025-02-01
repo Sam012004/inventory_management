@@ -45,18 +45,16 @@ const RightSide = () => {
     const errors: string[] = [];
     if (registerUserDetails.firstname.trim() === '') {
       errorMessages.firstnameError = getErrorMsg('2.1', 'firstname_is_empty'); 
-      // errors.push(getErrorMsg('2.1', 'REGISTER_PAGE'));
       isValid = false;
     }
     if (registerUserDetails.lastname.trim() === '') {
       errorMessages.lastnameError = getErrorMsg('2.9', 'lastname_is_empty'); 
-      // errors.push(getErrorMsg('2.1', 'REGISTER_PAGE'));
+      
       isValid = false;
     }
     if (registerUserDetails.email.trim() === '') {
       errorMessages.emailError = getErrorMsg('2.2', 'email_id_is_empty');
-      // errors.push(getErrorMsg('2.2', 'email_id_is_empty'));
-      // errors.push(errorMessages.emailError);
+    
       isValid = false;
     } else if (!emailRegex.test(registerUserDetails.email)) {
       errorMessages.emailError = getErrorMsg('2.3', 'email_id_is_invalid');
@@ -65,11 +63,11 @@ const RightSide = () => {
     }
     if (registerUserDetails.password.trim() === '') {
       errorMessages.passwordError = getErrorMsg('2.4', 'password_is_empty');
-      errors.push(getErrorMsg('2.4', 'password_is_empty'));
+     
       isValid = false;
     } else if (!passwordRegex.test(registerUserDetails.password)) {
       errorMessages.passwordError = getErrorMsg('2.7', 'password_is_Invalid');
-      errors.push(getErrorMsg('2.7', 'password_is_Invalid'));
+     
       isValid = false;
     }
     if (registerUserDetails.confirmpassword.trim() === '') {
@@ -78,7 +76,7 @@ const RightSide = () => {
       isValid = false;
     } else if (registerUserDetails.password !== registerUserDetails.confirmpassword) {
       errorMessages.confirmPasswordError = getErrorMsg('2.6', 'confirm_password_mismatch');
-      errors.push(getErrorMsg('2.6', 'confirm_password_mismatch'))
+      
       isValid = false;
     }
     setRegisterUserDetailsError(errorMessages);

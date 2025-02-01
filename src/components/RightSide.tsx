@@ -5,24 +5,26 @@ import { FaFacebookF, FaUser, FaLock, FaGithub } from "react-icons/fa";
 import { IoLogoLinkedin } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
-import { getErrorMsg } from "../data/errorMsg"
+import { getErrorMsg } from "../data/errorMsg";
 import { UserDetailsError, UserDetailsType } from "../Interface/Login.interface";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const RightSide = () => {
   const [userDetailsError, setUserDetailsError] = useState<UserDetailsError>({ userNameError: '', passwordError: '' });
   const [userDetails, setUserDetails] = useState<UserDetailsType>({ userName: '', password: '' });
- const navigate = useNavigate()
-  function handleLogin(event: any) {
+  const navigate = useNavigate();
+
+  const handleLogin = async (event: any) => {
+    event.preventDefault(); 
+
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
     let isValid = true;
-    let LoginData = [];
-    event.preventDefault();
 
+   
     setUserDetailsError({ userNameError: '', passwordError: '' });
 
+    // Validate email
     if (userDetails.userName.trim() === '') {
       setUserDetailsError((prevState) => ({
         ...prevState,
@@ -35,8 +37,6 @@ const RightSide = () => {
         userNameError: getErrorMsg('1.2', 'email_id_is_invalid'),
       }));
       isValid = false;
-    } else {
-      LoginData.push(userDetails.userName);
     }
 
     if (userDetails.password.trim() === '') {
@@ -46,26 +46,54 @@ const RightSide = () => {
       }));
       isValid = false;
     }
-    else {
-      LoginData.push(userDetails.password);
+
+    if (!isValid) {
+      console.log("Form not valid");
+      return; 
     }
 
-    if (isValid) {
-      console.log("Login successful!");
-      console.log(userDetails);
-     setUserDetails({
-       userName: '', 
-       password: '' 
+    try {
+      const response = await axios.post('http://localhost:5000/users/login', {
+        email: userDetails.userName,
+        password: userDetails.password,
       });
 
-      setUserDetailsError({
-         userNameError: '',
-         passwordError: ''
-      })
-      navigate('/homepage');
+      if (response.status === 200) {
+        console.log()
+        console.log("role : " + response.data.user.role)
+        const userRole = response.data.user.role;
+        localStorage.setItem('userRole', userRole);
+        console.log('Login successful:', response.data);
+        navigate('/homepage');
+      } else {
+        console.log('Login failed:', response.data.message);
+        if (response.data.message === "User not found") {
+          setUserDetailsError((prevState) => ({
+            ...prevState,
+            userNameError: 'User does not exist.',
+          }));
+        }
+      }
+
+    } catch (error:any) {
+      console.error('Error during login:', error);
+      if (error.response) {
+        console.error('Backend error message:', error.response.data);
+        setUserDetailsError((prevState) => ({
+          ...prevState,
+          userNameError: error.response.data.message || 'An error occurred. Please try again.',
+        }));
+      } else {
+        setUserDetailsError((prevState) => ({
+          ...prevState,
+          userNameError: 'Network error. Please try again later.',
+        }));
+      }
     }
-  }
-  
+
+    setUserDetails({ userName: '', password: '' });
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setUserDetails(prevState => ({
       ...prevState,
@@ -80,7 +108,6 @@ const RightSide = () => {
     }
   };
 
-
   return (
     <form onSubmit={handleLogin}>
       <Box className={styles.RightContainer} sx={{ width: '100%', maxWidth: 500 }}>
@@ -93,17 +120,18 @@ const RightSide = () => {
           </p>
           <TextField
             id="outlined-basic"
-            size='small'
+            size="small"
             className={styles.inputField}
             placeholder="Enter Username"
             variant="outlined"
             value={userDetails.userName}
             onChange={(e) => handleInputChange('userName', e.target.value)}
             InputProps={{
-              endAdornment: <InputAdornment position='end'><FaUser /></InputAdornment>,
+              endAdornment: <InputAdornment position="end"><FaUser /></InputAdornment>,
             }}
           />
-          <p className={styles.ErrorMessage} style={{whiteSpace:"preserve"}}>
+      
+          <p className={styles.ErrorMessage} style={{ whiteSpace: "preserve", color: "red" }}>
             {userDetailsError.userNameError ? userDetailsError.userNameError : " "}
           </p>
 
@@ -113,14 +141,14 @@ const RightSide = () => {
           <TextField
             id="password"
             placeholder="Enter Password"
-            size='small'
+            size="small"
             className={styles.inputField}
             variant="outlined"
             type="password"
             value={userDetails.password}
             onChange={(e) => handleInputChange('password', e.target.value)}
             InputProps={{
-              endAdornment: <InputAdornment position='end'><FaLock /></InputAdornment>
+              endAdornment: <InputAdornment position="end"><FaLock /></InputAdornment>
             }}
           />
           <p style={{ marginTop: "0px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
@@ -134,7 +162,6 @@ const RightSide = () => {
         <Button
           variant="contained"
           sx={{ width: "80%", height: "40%" }}
-          // onClick={handleLogin}
           type="submit"
         >
           <Typography style={{ textTransform: 'none', fontWeight: 700 }}>Login</Typography>
