@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Sidebar from './SideBar';
 import Header from './Header';
 import SettingsTable from '../components/SettingsTable';
-
+// import styles from "./HomePage.module.css"
 function HomePage() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -33,8 +33,7 @@ function HomePage() {
           marginTop: theme.spacing(8),
         }}
       >
-        <h1>Here are some of the product details</h1>
-
+       
         {showTable && <SettingsTable />}
       </Box>
     </Box>

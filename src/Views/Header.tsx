@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { AppBar, Toolbar, Typography, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, Avatar, IconButton } from '@mui/material';
 import { blue } from '@mui/material/colors';
-
+import { IoIosSettings } from "react-icons/io";
+import styles from "./Header.module.css"
 interface HeaderProps {
   open: boolean;
 }
@@ -36,7 +37,8 @@ const Header: React.FC<HeaderProps> = ({ open }) => {
         >
           Inventory Management
         </Typography>
-        <Avatar sx={{ bgcolor: blue[700] }}>A</Avatar>
+        <IconButton><IoIosSettings/></IconButton>
+        <Avatar className ={styles.avatar}sx={{ bgcolor: blue[700] }}>A</Avatar>
       </Toolbar>
     </AppBar>
   );

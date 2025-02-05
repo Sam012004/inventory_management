@@ -59,10 +59,13 @@ const RightSide = () => {
       });
 
       if (response.status === 200) {
-        console.log()
+        // console.log()
         console.log("role : " + response.data.user.role)
         const userRole = response.data.user.role;
         localStorage.setItem('userRole', userRole);
+        if(userRole === 'admin'){
+          console.log("admin login successfully");
+        }
         console.log('Login successful:', response.data);
         navigate('/homepage');
       } else {

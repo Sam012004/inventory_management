@@ -9,14 +9,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { FaHome, FaStore, FaUserAlt, FaBoxes, FaCog } from 'react-icons/fa';
+import Tooltip from '@mui/material/Tooltip';
+import { FaHome, FaStore, FaBoxes } from 'react-icons/fa';
+import { FaUserPlus } from 'react-icons/fa';
+import { BsPersonWorkspace } from 'react-icons/bs';
+import styles from "./Sidebar.module.css"
 
 const drawerWidth = 240;
 
 const icons = [
   <FaHome />,
   <FaStore />,
-  <FaUserAlt />,
+  <BsPersonWorkspace />,
   <FaBoxes />,
 ];
 
@@ -74,74 +78,38 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 );
 
-
 interface SidebarProps {
   open: boolean;
   onToggle: () => void;
-  onSettingsClick: () => void;  
+  onSettingsClick: () => void;
 }
-
-// const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
-//   const userRole = localStorage.getItem('userRole');
-
-//   return (
-//     <Drawer variant="permanent" open={open}>
-//       <DrawerHeader>
-//         <IconButton
-//           color="inherit"
-//           aria-label="open drawer"
-//           onClick={onToggle}
-//           edge="start"
-//           sx={{ marginLeft: 0.5 }}
-//         >
-//           {open ? <ChevronLeftIcon /> : <MenuIcon />}
-//         </IconButton>
-//       </DrawerHeader>
-
-//       <List>
-//         {['Home', 'Vendor', 'Employees', 'Products'].map((text, index) => (
-//           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-//             <ListItemButton
-//               sx={[{
-//                 minHeight: 48,
-//                 px: 2.5,
-//               }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
-//             >
-//               <ListItemIcon
-//                 sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}
-//               >
-//                 {icons[index]}
-//               </ListItemIcon>
-//               {open && <ListItemText primary={text} />}
-//             </ListItemButton>
-//           </ListItem>
-//         ))}
-
-//         {/* Conditionally render the Settings icon based on the user role */}
-//         {userRole === 'admin' && (
-//           <ListItem disablePadding sx={{ display: 'block' }}>
-//             <ListItemButton
-//               sx={[{ minHeight: 48, px: 2.5 }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
-//             >
-//               <ListItemIcon
-//                 sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}
-//               >
-//                 <FaCog />
-//               </ListItemIcon>
-//               {open && <ListItemText primary="Settings" />}
-//             </ListItemButton>
-//           </ListItem>
-//         )}
-//       </List>
-//     </Drawer>
-//   );
-// };
 
 const Sidebar: React.FC<SidebarProps> = ({ open, onToggle, onSettingsClick }) => {
   const userRole = localStorage.getItem('userRole');
+  
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+   
+    const handleClickOutside = (event: MouseEvent) => {
+      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+       
+        onToggle();
+      }
+    };
+
+    
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open, onToggle]);
 
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer variant="permanent" open={open} ref={drawerRef}>
       <DrawerHeader>
         <IconButton
           color="inherit"
@@ -156,33 +124,41 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle, onSettingsClick }) =>
 
       <List>
         {['Home', 'Vendor', 'Employees', 'Products'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton sx={[{
-              minHeight: 48,
-              px: 2.5,
-            }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}>
-              <ListItemIcon
-                sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}
+          <Tooltip key={text} title={text} arrow>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton 
+                sx={[{
+                  minHeight: 48,
+                  px: 2.5,
+                }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
               >
-                {icons[index]}
-              </ListItemIcon>
-              {open && <ListItemText primary={text} />}
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}
+                >
+                  {icons[index]}
+                </ListItemIcon>
+                {open && <ListItemText primary={text} />}
+              </ListItemButton>
+            </ListItem>
+          </Tooltip>
         ))}
 
         {userRole === 'admin' && (
-          <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={[{ minHeight: 48, px: 2.5 }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
-              onClick={onSettingsClick}  
-            >
-              <ListItemIcon sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}>
-                <FaCog />
-              </ListItemIcon>
-              {open && <ListItemText primary="Settings" />}
-            </ListItemButton>
-          </ListItem>
+          <Tooltip title="Settings" arrow>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={[{ minHeight: 48, px: 2.5 }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
+                onClick={onSettingsClick}
+              >
+                <ListItemIcon
+                  sx={[{ minWidth: 0, justifyContent: 'center', fontSize: 'large' }, open ? { mr: 3 } : { mr: 'auto' }]}
+                >
+                  <FaUserPlus />
+                </ListItemIcon>
+                {open && <ListItemText primary="Settings" />}
+              </ListItemButton>
+            </ListItem>
+          </Tooltip>
         )}
       </List>
     </Drawer>

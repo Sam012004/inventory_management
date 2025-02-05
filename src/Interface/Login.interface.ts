@@ -22,4 +22,9 @@ export interface RegisterUserDetailError{
     passwordError:string;
     confirmPasswordError:string;
 }
+export interface edituserDetailError{
+    firstnameError:string;
+    lastnameError:string;
+  
+}
 
