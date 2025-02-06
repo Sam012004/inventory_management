@@ -4,24 +4,37 @@ import { useTheme } from '@mui/material/styles';
 import Sidebar from './SideBar';
 import Header from './Header';
 import SettingsTable from '../components/SettingsTable';
-// import styles from "./HomePage.module.css"
+import ProductTable from '../components/Product';
+
 function HomePage() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [showTable, setShowTable] = React.useState(false); 
+  const [productpage, setProductPage] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
   const handleSettingsClick = () => {
-    setShowTable((prevState) => !prevState); 
+    setProductPage(false);
+    setShowTable(true); 
+  };
+
+  const handleProductPage = () => {
+   setShowTable(false);
+    setProductPage(true);
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Sidebar open={open} onToggle={handleDrawerToggle} onSettingsClick={handleSettingsClick} />
+      <Sidebar
+        open={open}
+        onToggle={handleDrawerToggle}
+        onSettingsClick={handleSettingsClick}
+        onProductPage={handleProductPage}
+      />
       <Header open={open} />
 
       <Box
@@ -33,8 +46,8 @@ function HomePage() {
           marginTop: theme.spacing(8),
         }}
       >
-       
         {showTable && <SettingsTable />}
+        {productpage && <ProductTable />}
       </Box>
     </Box>
   );

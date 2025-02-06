@@ -1,0 +1,113 @@
+/* ProductTable.module.css */
+
+.heading {
+  text-align: start;
+  margin: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  
+}
+
+.tableContainer {
+    padding: 10px;
+    border-radius: 20px !important;
+  }
+
+.tableHeader th {
+    background-color:  #a8a8f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tableRow {
+  background-color: #fff;
+ 
+}
+
+.tableCell {
+  padding: 12px;
+  text-align: center;
+}
+
+.noDataCell {
+  padding: 10px;
+  font-size: 11px;
+  color: #888;
+}
+
+.iconbaground {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.iconButton {
+  color: #333;
+}
+
+
+.addButtontop{
+    margin-left: 1150px !important;
+    /* border-radius: 70px; */
+
+    padding-left: -10px !important;
+    
+}
+
+.addButtontop p {
+    font-size: 8px;
+}
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.dialog {
+  padding: 20px;
+}
+
+.dialogTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.paragrap {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.textField {
+  margin-top: 20px;
+}
+
+.inputBaseRoot {
+  width: 100%;
+}
+
+.cancelButton {
+  background-color: #ccc;
+  color: #333;
+}
+
+.cancelButton:hover {
+  background-color: #aaa;
+}
+
+ .updateButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.addButton:hover, .updateButton:hover {
+  background-color: #218838;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+

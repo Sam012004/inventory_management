@@ -8,20 +8,22 @@
     border-radius: 20px !important;
   }
   .noDataCell h1{
-     font-size: 15px !important;
+     font-size: 20px !important;
   }
 
   .tableHeader {
-    background-color:  #a8a8f0;; 
+    background-color:  #a8a8f0;
    
     justify-content: center;
   }
   .tableHeader th {
     text-align: center !important;
     font-weight: bold;
+    
   }
    tbody tr td {
     text-align: center !important;
+    color: #888 !important;
   }
   .heading{
     align-items: center;

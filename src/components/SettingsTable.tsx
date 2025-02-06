@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormHelperText } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 import { IoEyeOutline } from "react-icons/io5";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { VscVerified } from "react-icons/vsc";
@@ -16,7 +16,8 @@ const SettingsTable: React.FC = () => {
   const [rows, setRows] = React.useState<any[]>([]);
   const [newFirstName, setNewFirstName] = React.useState('');
   const [newLastName, setNewLastName] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
+ 
+  const [loading, setLoading] = React.useState(false);
   
   const [edituserdetailsError, setEditUserDetailsError] = React.useState<edituserDetailError>({
     firstnameError: '',
@@ -49,11 +50,14 @@ const SettingsTable: React.FC = () => {
   const handleDelete = async () => {
     if (selectedUser) {
       try {
+        setLoading(true);
         await axios.delete(`http://localhost:5000/users/users/${selectedUser.id}`);
         setRows((prevRows) => prevRows.filter((row) => row.id !== selectedUser.id));
         setDeleteOpen(false);
+        setLoading(false);
       } catch (error) {
         console.error('Error deleting user:', error);
+        setLoading(false);
       }
     }
   };
@@ -97,34 +101,31 @@ const SettingsTable: React.FC = () => {
   };
 
   const handleEditSubmit = async () => {
-  
-
-    setEditUserDetailsError({
-      firstnameError: '',
-      lastnameError: '',
-    });
-
     let isValid = true;
-
-    if (!newFirstName) {
-      setEditUserDetailsError((prev) => ({ ...prev, firstnameError: 'First Name is required.' }));
+    // Validation
+    if (newFirstName.trim() === '') {
+      setEditUserDetailsError((prevState) => ({
+        ...prevState,
+        firstnameError: 'First name is required.',
+      }));
+      isValid = false;
+    }
+    if (newLastName.trim() === '') {
+      setEditUserDetailsError((prevState) => ({
+        ...prevState,
+        lastnameError: 'Last name is required.',
+      }));
       isValid = false;
     }
 
-    if (!newLastName) {
-      setEditUserDetailsError((prev) => ({ ...prev, lastnameError: 'Last Name is required.' }));
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    if (selectedUser) {
+    if (isValid) {
       try {
+        setLoading(true);
         await axios.put(`http://localhost:5000/users/users/updateUser/${selectedUser.id}`, {
           firstname: newFirstName,
           lastname: newLastName,
         });
-        setRows(prevRows =>
+        setRows((prevRows) =>
           prevRows.map((row) =>
             row.id === selectedUser.id
               ? { ...row, firstname: newFirstName, lastname: newLastName }
@@ -133,20 +134,26 @@ const SettingsTable: React.FC = () => {
         );
         fetchUsers();
         setEditOpen(false);
+        setLoading(false);
       } catch (error) {
         console.error('Error updating user:', error);
+        setLoading(false);
       }
     }
   };
 
   const handleCloseEditDialog = () => {
     setEditOpen(false);
-    setErrorMessage('');
+ 
+    setEditUserDetailsError({
+      firstnameError: '',
+      lastnameError: '',
+    });
   };
 
   return (
     <>
-      <h1 className={styles.heading}> User Details</h1>
+      <h1 className={styles.heading}>User Details</h1>
       <TableContainer component={Paper} className={styles.tableContainer}>
         <Table sx={{ minWidth: 500 }} aria-label="simple table">
           <TableHead className={styles.tableHeader}>
@@ -158,16 +165,16 @@ const SettingsTable: React.FC = () => {
               <TableCell className={styles.tableCell}>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody >
-          {rows.length === 0 && (
-            <TableRow className={styles.tableRow}>
-              <TableCell colSpan={5} align="center" className={styles.noDataCell}>
-                <h1 >No users available</h1>
-              </TableCell>
-            </TableRow>
-          )}
-          
-              {rows.map((row) => (
+          <TableBody>
+            {rows.length === 0 && (
+              <TableRow className={styles.tableRow}>
+                <TableCell colSpan={5} align="center" className={styles.noDataCell}>
+                  <h1>No users available</h1>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {rows.map((row) => (
               <TableRow key={row.id} className={styles.tableRow}>
                 <TableCell>{row.userName}</TableCell>
                 <TableCell>{row.email_id}</TableCell>
@@ -229,10 +236,11 @@ const SettingsTable: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDeleteDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}>Cancel</Button>
-            <Button onClick={handleDelete} color="secondary" className={`${styles.button} ${styles.deleteButton}`}>Delete</Button>
+            <Button onClick={handleDelete} color="secondary" className={`${styles.button} ${styles.deleteButton}`} disabled={loading}>Delete</Button>
           </DialogActions>
         </Dialog>
 
+        {/* Edit User Dialog */}
         <Dialog open={editOpen} onClose={handleCloseEditDialog} className={styles.dialog}>
           <DialogTitle className={styles.dialogTitle}>Edit User</DialogTitle>
           <DialogContent>
@@ -247,9 +255,9 @@ const SettingsTable: React.FC = () => {
                   onChange={(e) => setNewFirstName(e.target.value)}
                   className={`${styles.textField} ${styles.inputBaseRoot}`}
                 />
-                      <p style={{ marginTop: "0px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
-            {edituserdetailsError.firstnameError ? edituserdetailsError.firstnameError: " "}
-          </p>
+                <p style={{marginTop: "-13px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
+                  {edituserdetailsError.firstnameError ? edituserdetailsError.firstnameError :" "}
+                </p>
                 <p>LastName</p>
                 <TextField
                   size="small"
@@ -257,16 +265,15 @@ const SettingsTable: React.FC = () => {
                   onChange={(e) => setNewLastName(e.target.value)}
                   className={`${styles.textField} ${styles.inputBaseRoot}`}
                 />
-                  <p style={{ marginTop: "0px", whiteSpace: "preserve", color: 'red', fontSize: "12px" }}>
-            {edituserdetailsError.lastnameError ? edituserdetailsError.lastnameError : " "}
-          </p>
-             
+                <p style={{marginTop: "-13px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
+                  {edituserdetailsError.lastnameError ? edituserdetailsError.lastnameError :" "}
+                </p>
               </div>
             )}
           </DialogContent>
-          <DialogActions className={styles.can}>
+          <DialogActions>
             <Button onClick={handleCloseEditDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}>Cancel</Button>
-            <Button onClick={handleEditSubmit} color="secondary" className={`${styles.button} ${styles.updateButton}`}>Update</Button>
+            <Button onClick={handleEditSubmit} color="secondary" className={`${styles.button} ${styles.updateButton}`} disabled={loading}>Update</Button>
           </DialogActions>
         </Dialog>
       </TableContainer>
