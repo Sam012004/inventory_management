@@ -16,14 +16,14 @@ function HomePage() {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleSettingsClick = () => {
+  const handleUserAddClick = () => {
     setProductPage(false);
-    setShowTable(true); 
+    setShowTable(true); // Show the settings table when "Add User" is clicked
   };
 
   const handleProductPage = () => {
-   setShowTable(false);
-    setProductPage(true);
+    setShowTable(false);
+    setProductPage(true); // Show the product table when needed
   };
 
   return (
@@ -32,10 +32,10 @@ function HomePage() {
       <Sidebar
         open={open}
         onToggle={handleDrawerToggle}
-        onSettingsClick={handleSettingsClick}
+        onSettingsClick={handleUserAddClick} // Optionally pass this function to Sidebar as well if needed
         onProductPage={handleProductPage}
       />
-      <Header open={open} />
+      <Header open={open} onUserAddClick={handleUserAddClick} /> {/* Pass the function here */}
 
       <Box
         component="main"

@@ -54,3 +54,16 @@ a:active {
   text-decoration: underline;
 }
 
+
+
+
+.closearrow{
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+ }
+
+ .closearrow button{
+  margin-right: 5px;
+
+ }

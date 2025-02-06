@@ -50,6 +50,7 @@
   }
   
   .dialogTitle {
+    width: 500px;
     font-weight: bold;
     font-size: 1.25rem;
     color: #1976d2;
@@ -57,8 +58,12 @@
   
  .paragrap p{
     padding-bottom: -15px !important;
-    font-size: 13px;
+    font-size: 12px;
 
+ }
+
+ .paragrap .labeles{
+  margin-bottom: 9px;
  }
   .paragrap p div{
     width: 500px;
@@ -152,3 +157,13 @@
 
 
   
+ .closearrow{
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+ }
+
+ .closearrow button{
+  margin-right: 5px;
+
+ }

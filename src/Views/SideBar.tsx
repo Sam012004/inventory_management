@@ -131,7 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle, onSettingsClick, onPr
           </Tooltip>
         ))}
 
-        {userRole === 'admin' && (
+        {/* {userRole === 'admin' && (
           <Tooltip title="Settings" arrow placement="right-start">
             <ListItem disablePadding>
               <ListItemButton
@@ -151,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle, onSettingsClick, onPr
               </ListItemButton>
             </ListItem>
           </Tooltip>
-        )}
+        )} */}
       </List>
     </Drawer>
   );

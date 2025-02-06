@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Typography, Box } from '@mui/material';
 import { IoEyeOutline } from "react-icons/io5";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { VscVerified } from "react-icons/vsc";
@@ -7,6 +7,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import axios from 'axios';
 import styles from './SettingsTable.module.css';
 import { edituserDetailError } from '../Interface/Login.interface';
+import CloseIcon from '@mui/icons-material/Close';
 
 const SettingsTable: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -209,7 +210,13 @@ const SettingsTable: React.FC = () => {
         </Table>
 
         <Dialog open={open} onClose={handleClose} className={styles.dialog}>
-          <DialogTitle className={styles.dialogTitle}>User Details</DialogTitle>
+          <Box className={styles.closearrow}>
+                <DialogTitle className={styles.dialogTitle}>User Details</DialogTitle>
+             
+                <IconButton onClick={handleClose}>
+                     <CloseIcon />
+                </IconButton> 
+            </Box>
           <DialogContent>
             {selectedUser && (
               <div>
@@ -221,12 +228,17 @@ const SettingsTable: React.FC = () => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary" className={`${styles.button} ${styles.cancelButton}`}>Close</Button>
+            <Button onClick={handleClose} color="primary" className={`${styles.button} ${styles.cancelButton}`}><Typography textTransform={'lowercase'}>close</Typography></Button>
           </DialogActions>
         </Dialog>
 
         <Dialog open={deleteOpen} onClose={handleCloseDeleteDialog} className={styles.dialog}>
-          <DialogTitle className={styles.dialogTitle}>Delete Confirm</DialogTitle>
+            <Box className={styles.closearrow}>
+               <DialogTitle className={styles.dialogTitle}>Delete Confirm</DialogTitle>
+                <IconButton onClick={handleCloseDeleteDialog}>
+                     <CloseIcon />
+                </IconButton> 
+            </Box>
           <DialogContent>
             {selectedUser && (
               <div>
@@ -235,45 +247,57 @@ const SettingsTable: React.FC = () => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDeleteDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}>Cancel</Button>
-            <Button onClick={handleDelete} color="secondary" className={`${styles.button} ${styles.deleteButton}`} disabled={loading}>Delete</Button>
+            <Button onClick={handleCloseDeleteDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}>
+              
+            <Typography textTransform={'lowercase'}>cancel</Typography></Button>
+           <Button onClick={handleDelete} color="secondary" className={`${styles.button} ${styles.deleteButton}`} disabled={loading}>   <Typography textTransform={'lowercase'}>delete</Typography></Button>
           </DialogActions>
         </Dialog>
 
         {/* Edit User Dialog */}
         <Dialog open={editOpen} onClose={handleCloseEditDialog} className={styles.dialog}>
+          <Box className={styles.closearrow}>
           <DialogTitle className={styles.dialogTitle}>Edit User</DialogTitle>
+   
+                <IconButton onClick={handleCloseEditDialog}>
+                     <CloseIcon />
+                </IconButton> 
+          </Box>
           <DialogContent>
             {selectedUser && (
               <div className={styles.paragrap}>
-                <p>Email</p>
+                <p className={styles.labeles}>Email</p>
                 <TextField size="small" value={selectedUser.email_id} disabled className={styles.textField} />
-                <p>FirstName</p>
+                <p style={{marginTop: "-2px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
+                  {edituserdetailsError.firstnameError ? " " :" "}
+                </p>
+ 
+                <p className={styles.labeles}>FirstName</p>
                 <TextField
                   size="small"
                   value={newFirstName}
                   onChange={(e) => setNewFirstName(e.target.value)}
                   className={`${styles.textField} ${styles.inputBaseRoot}`}
                 />
-                <p style={{marginTop: "-13px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
+                <p style={{marginTop: "-2px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
                   {edituserdetailsError.firstnameError ? edituserdetailsError.firstnameError :" "}
                 </p>
-                <p>LastName</p>
+                <p  className={styles.labeles}>LastName</p>
                 <TextField
                   size="small"
                   value={newLastName}
                   onChange={(e) => setNewLastName(e.target.value)}
                   className={`${styles.textField} ${styles.inputBaseRoot}`}
                 />
-                <p style={{marginTop: "-13px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
+                <p style={{marginTop: "-2px" ,whiteSpace: "preserve", color: 'red', fontSize: '11px' }}>
                   {edituserdetailsError.lastnameError ? edituserdetailsError.lastnameError :" "}
                 </p>
               </div>
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseEditDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}>Cancel</Button>
-            <Button onClick={handleEditSubmit} color="secondary" className={`${styles.button} ${styles.updateButton}`} disabled={loading}>Update</Button>
+            <Button onClick={handleCloseEditDialog} color="primary" className={`${styles.button} ${styles.cancelButton}`}><Typography textTransform={'lowercase'}>cancel</Typography></Button>
+            <Button onClick={handleEditSubmit} color="secondary" className={`${styles.button} ${styles.updateButton}`} disabled={loading}><Typography textTransform={'lowercase'}>update</Typography></Button>
           </DialogActions>
         </Dialog>
       </TableContainer>

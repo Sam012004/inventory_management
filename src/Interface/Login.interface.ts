@@ -27,4 +27,10 @@ export interface edituserDetailError{
     lastnameError:string;
   
 }
+export interface edituserproductError{
+    productnameError:string;
+    quantityError:string;
+    priceError:string;
+  
+}
 
